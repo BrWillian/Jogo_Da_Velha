@@ -1,6 +1,9 @@
 import numpy as np
 from os import system
 
+co = "\033[31m"
+cx = "\033[1m"
+
 class JogoDaVelha:
     def __init__(self):
         self.__player_1 = None
@@ -30,13 +33,20 @@ class JogoDaVelha:
 
     def printa(self):
 
-        print(f'  {self.array[0,0]}  |  {self.array[0,1]}  |  {self.array[0,2]}  ')
-        print('_____|_____|_____')
-        print('     |     |     ')
-        print(f'  {self.array[1,0]}  |  {self.array[1,1]}  |  {self.array[1,2]}  ')
-        print('_____|_____|_____')
-        print('     |     |     ')
-        print(f'  {self.array[2,0]}  |  {self.array[2,1]}  |  {self.array[2,2]}  ')
+        print("\n" * 40 + f'''
+                                   |     |      
+                                {self.array[0,0]}  |  {self.array[0,1]}  |  {self.array[0,2]}  
+                              _____|_____|_____
+                                   |     |      
+                                {self.array[1,0]}  |  {self.array[1,1]}  |  {self.array[1,2]}  
+                              _____|_____|_____
+                                   |     |      
+                                {self.array[2,0]}  |  {self.array[2,1]}  |  {self.array[2,2]}  
+                                   |     |    
+
+        
+        ''')
+        print('\n' * 3)
 
     def player_1(self, x, y):
         self.x, self.y = x,y
