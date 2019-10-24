@@ -1,57 +1,174 @@
-import numpy as np
-from os import system
+import time
 
-co = "\033[31m"
-cx = "\033[1m"
-
-class JogoDaVelha:
+class Game:
     def __init__(self):
-        self.__player_1 = None
-        self.__player_2 = None
-        self.array = np.array([[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']], dtype=np.str)
+        self.initialize_game()
+        self.Jogador = None
+        self.player_turn = 'O'
 
-    def jogar(self):
-        self.__player_1 = input('Digite nome do jogador 1: ')
-        self.__player_2 = input('Digite nome do jogador 2: ')
-        system('clear')
-        self.printa()
-        p = 9
-        while(p):
-            if p % 2 != 0:
-                x, y = input('Digite a posicao: ').split(' ')
-                x = int(x)
-                y = int(y)
-                self.player_1(x,y)
-            else:
-                x, y = input('Digite a posicao: ').split(' ')
-                x = int(x)
-                y = int(y)
-                self.player_2(x, y)
-            p -= 1
-            self.printa()
+    def initialize_game(self):
+        self.current_state = [[' ', ' ', ' '],
+                              [' ', ' ', ' '],
+                              [' ', ' ', ' ']]
 
 
-    def printa(self):
+        self.player_turn = 'X'
 
+    def draw_board(self):
         print("\n" * 40 + f'''
-                                   |     |      
-                                {self.array[0,0]}  |  {self.array[0,1]}  |  {self.array[0,2]}  
-                              _____|_____|_____
-                                   |     |      
-                                {self.array[1,0]}  |  {self.array[1,1]}  |  {self.array[1,2]}  
-                              _____|_____|_____
-                                   |     |      
-                                {self.array[2,0]}  |  {self.array[2,1]}  |  {self.array[2,2]}  
-                                   |     |    
+                                           |     |      
+                                        {self.current_state[0][0]}  |  {self.current_state[0][1]}  |  {self.current_state[0][2]}  
+                                      _____|_____|_____
+                                           |     |      
+                                        {self.current_state[1][0]}  |  {self.current_state[1][1]}  |  {self.current_state[1][2]}  
+                                      _____|_____|_____
+                                           |     |      
+                                        {self.current_state[2][0]}  |  {self.current_state[2][1]}  |  {self.current_state[2][2]}  
+                                           |     |    
 
-        
-        ''')
+                ''')
         print('\n' * 3)
 
-    def player_1(self, x, y):
-        self.x, self.y = x,y
-        self.array[self.x, self.y] = 'X'
+    def is_valid(self, px, py):
+        if px < 0 or px > 2 or py < 0 or py > 2:
+            return False
+        elif self.current_state[px][py] != ' ':
+            return False
+        else:
+            return True
 
-    def player_2(self, x, y):
-        self.x, self.y = x,y
-        self.array[self.x, self.y] = 'O'
+    def is_end(self):
+
+        for i in range(0, 3):
+            if (self.current_state[0][i] != ' ' and
+                    self.current_state[0][i] == self.current_state[1][i] and
+                    self.current_state[1][i] == self.current_state[2][i]):
+                return self.current_state[0][i]
+
+
+        for i in range(0, 3):
+            if (self.current_state[i] == ['X', 'X', 'X']):
+                return 'X'
+            elif (self.current_state[i] == ['O', 'O', 'O']):
+                return 'O'
+
+
+        if (self.current_state[0][0] != ' ' and
+                self.current_state[0][0] == self.current_state[1][1] and
+                self.current_state[0][0] == self.current_state[2][2]):
+            return self.current_state[0][0]
+
+
+        if (self.current_state[0][2] != ' ' and
+                self.current_state[0][2] == self.current_state[1][1] and
+                self.current_state[0][2] == self.current_state[2][0]):
+            return self.current_state[0][2]
+
+
+        for i in range(0, 3):
+            for j in range(0, 3):
+                if (self.current_state[i][j] == ' '):
+                    return None
+
+        return ' '
+
+    def max(self):
+
+        maxv = -2
+
+        px = None
+        py = None
+
+        result = self.is_end()
+
+
+        if result == 'X':
+            return (-1, 0, 0)
+        elif result == 'O':
+            return (1, 0, 0)
+        elif result == ' ':
+            return (0, 0, 0)
+
+        for i in range(0, 3):
+            for j in range(0, 3):
+                if self.current_state[i][j] == ' ':
+                    self.current_state[i][j] = 'O'
+                    (m, min_i, min_j) = self.min()
+                    if m > maxv:
+                        maxv = m
+                        px = i
+                        py = j
+                    self.current_state[i][j] = ' '
+        return (maxv, px, py)
+
+    def min(self):
+
+        minv = 2
+
+        qx = None
+        qy = None
+
+        result = self.is_end()
+
+        if result == 'X':
+            return (-1, 0, 0)
+        elif result == 'O':
+            return (1, 0, 0)
+        elif result == ' ':
+            return (0, 0, 0)
+
+        for i in range(0, 3):
+            for j in range(0, 3):
+                if self.current_state[i][j] == ' ':
+                    self.current_state[i][j] = 'X'
+                    (m, max_i, max_j) = self.max()
+                    if m < minv:
+                        minv = m
+                        qx = i
+                        qy = j
+                    self.current_state[i][j] = ' '
+
+        return (minv, qx, qy)
+
+    def play(self):
+        while True:
+            self.draw_board()
+            self.result = self.is_end()
+
+            if self.Jogador == None:
+                self.Jogador = input('Digite o nome do jogador: ')
+
+            if self.result != None:
+                if self.result == 'X':
+                    print(f'Ganhador é {self.Jogador}')
+                elif self.result == 'O':
+                    print('Ganhador foi a IA!')
+                elif self.result == ' ':
+                    print("Deu velha!")
+
+                self.initialize_game()
+                return
+
+            if self.player_turn == 'X':
+
+                while True:
+
+                    (m, qx, qy) = self.min()
+
+                    px, py = input('Selecione a Cordenada: ').split(' ')
+                    px = int(px)
+                    py = int(py)
+
+                    (qx, qy) = (px, py)
+
+                    if self.is_valid(px, py):
+                        self.current_state[px][py] = 'X'
+                        self.player_turn = 'O'
+                        break
+                    else:
+                        print('Movimento invalido!')
+
+            else:
+                (m, px, py) = self.max()
+                self.current_state[px][py] = 'O'
+                self.player_turn = 'X'
