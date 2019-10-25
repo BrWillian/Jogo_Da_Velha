@@ -1,1 +1,1 @@
-Jogo da velha simples feito em python.
+Jogo da velha simples utilizando algoritmo minmax feito em python.
