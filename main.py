@@ -1,5 +1,5 @@
-from classes.JogoDaVelha import JogoDaVelha
+from classes.JogoDaVelha import Game
 
-Jogo = JogoDaVelha()
+Jogo = Game()
 
-Jogo.jogar()
+Jogo.play()

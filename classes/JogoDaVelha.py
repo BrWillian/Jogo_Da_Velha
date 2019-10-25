@@ -4,7 +4,6 @@ class Game:
     def __init__(self):
         self.initialize_game()
         self.Jogador = None
-        self.player_turn = 'O'
 
     def initialize_game(self):
         self.current_state = [[' ', ' ', ' '],
@@ -16,15 +15,15 @@ class Game:
 
     def draw_board(self):
         print("\n" * 40 + f'''
-                                           |     |      
-                                        {self.current_state[0][0]}  |  {self.current_state[0][1]}  |  {self.current_state[0][2]}  
-                                      _____|_____|_____
-                                           |     |      
-                                        {self.current_state[1][0]}  |  {self.current_state[1][1]}  |  {self.current_state[1][2]}  
-                                      _____|_____|_____
-                                           |     |      
-                                        {self.current_state[2][0]}  |  {self.current_state[2][1]}  |  {self.current_state[2][2]}  
-                                           |     |    
+                                   |     |      
+                                {self.current_state[0][0]}  |  {self.current_state[0][1]}  |  {self.current_state[0][2]}  
+                              _____|_____|_____
+                                   |     |      
+                                {self.current_state[1][0]}  |  {self.current_state[1][1]}  |  {self.current_state[1][2]}  
+                              _____|_____|_____
+                                   |     |      
+                                {self.current_state[2][0]}  |  {self.current_state[2][1]}  |  {self.current_state[2][2]}  
+                                   |     |    
 
                 ''')
         print('\n' * 3)
